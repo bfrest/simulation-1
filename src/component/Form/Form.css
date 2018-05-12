@@ -1,0 +1,21 @@
+.form {
+  width: 20%;
+  background: #3ad866;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+}
+
+.form-button {
+  background: #ed6b5a;
+  border: none;
+  border-radius: 2px;
+}
+
+.form-img {
+  width: 300px;
+  height: 200px;
+  margin-top: 15px;
+}
