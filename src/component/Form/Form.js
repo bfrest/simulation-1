@@ -1,18 +1,40 @@
 import React, { Component } from "react";
 import mainUrl from "./img.js";
+import axios from "axios";
 
 class Form extends Component {
   constructor() {
     super();
 
     this.state = {
-      imgUrl: mainUrl
+      imgUrl: mainUrl,
+      name: "",
+      price: "",
+      url: ""
     };
     this.handleUrl = this.handleUrl.bind(this);
+    this.handleName = this.handleName.bind(this);
+    this.handlePrice = this.handlePrice.bind(this);
+    this.handleUrl = this.handleUrl.bind(this);
+    this.clearInputs = this.clearInputs.bind(this);
+    this.createProduct = this.createProduct.bind(this);
+    //this.handleAddToInventory = this.handleAddToInventory.bind(this);
   }
 
   handleUrl(event) {
     this.setState({ imgUrl: event.target.value });
+    // sets the image back to the no image available
+    if (event.target.value === "") {
+      this.setState({ imgUrl: mainUrl });
+    }
+  }
+
+  handleName(event) {
+    this.setState({ newName: event.target.value });
+  }
+
+  handlePrice(event) {
+    this.setState({ newPrice: event.target.value });
   }
 
   clearInputs(event) {
@@ -21,28 +43,33 @@ class Form extends Component {
     const url = document.querySelector(".url");
 
     productName.value = "";
-    priceInput.value = 0;
-    //url.value = "";
-    //this.setState({imgUrl: })
+    priceInput.value = "";
+    url.value = "";
+    this.setState({ imgUrl: mainUrl });
+  }
 
-    //TODO: make the cancel button work this.setState({ imgUrl: mainUrl });
+  createProduct() {
+    axios.post(`http://localhost:3001/api/products?name=${this.state.name}&price=${this.state.price}&image_url=${this.state.url}`);
+    this.props.getAllProducts();
+    this.clearInputs();
   }
 
   render() {
-    const UrlCopy = this.state.imgUrl;
+    const productName = document.querySelector(".productName");
+    const priceInput = document.querySelector(".price");
+    const url = document.querySelector(".url");
     return (
       <div>
-        <img src={this.state.imgUrl} />
+        <img src={this.state.imgUrl} alt="picture of the product" />
         <p>Product Name:</p>
-        <input name="name" type="text" className="productName" />
+        <input type="text" onChange={this.handleName} className="productName" />
         <p>Price</p>
-        <input name="price" type="text" placeholder="0" className="price" />
+        <input type="text" onChange={this.handlePrice} placeholder="0" className="price" />
         <p>Image URL:</p>
         {/*TODO: Make the image stay the same size no matter what*/}
-        <input name="url" type="text" onChange={this.handleUrl} />
+        <input type="text" onChange={this.handleUrl} className="url" />
         <button onClick={this.clearInputs}>Cancel</button>
-        <button>Add to inventory</button>
-        {}
+        <button onClick={this.createProduct}>Add to inventory</button>
       </div>
     );
   }
