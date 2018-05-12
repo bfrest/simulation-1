@@ -9,8 +9,7 @@ class Form extends Component {
     this.state = {
       imgUrl: mainUrl,
       name: "",
-      price: "",
-      url: ""
+      price: ""
     };
     this.handleUrl = this.handleUrl.bind(this);
     this.handleName = this.handleName.bind(this);
@@ -30,11 +29,11 @@ class Form extends Component {
   }
 
   handleName(event) {
-    this.setState({ newName: event.target.value });
+    this.setState({ name: event.target.value });
   }
 
   handlePrice(event) {
-    this.setState({ newPrice: event.target.value });
+    this.setState({ price: event.target.value });
   }
 
   clearInputs(event) {
@@ -49,15 +48,13 @@ class Form extends Component {
   }
 
   createProduct() {
-    axios.post(`http://localhost:3001/api/products?name=${this.state.name}&price=${this.state.price}&image_url=${this.state.url}`);
-    this.props.getAllProducts();
-    this.clearInputs();
+    axios.post(`http://localhost:3001/api/product?name=${this.state.name}&price=${this.state.price}&image_url=${this.state.imgUrl}`).then(() => {
+      this.props.getAllProducts();
+      this.clearInputs();
+    });
   }
 
   render() {
-    const productName = document.querySelector(".productName");
-    const priceInput = document.querySelector(".price");
-    const url = document.querySelector(".url");
     return (
       <div>
         <img src={this.state.imgUrl} alt="picture of the product" />
@@ -70,6 +67,7 @@ class Form extends Component {
         <input type="text" onChange={this.handleUrl} className="url" />
         <button onClick={this.clearInputs}>Cancel</button>
         <button onClick={this.createProduct}>Add to inventory</button>
+        {console.log(this.state.name, this.state.price, this.state.imgUrl)}
       </div>
     );
   }

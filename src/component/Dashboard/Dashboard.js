@@ -7,11 +7,12 @@ class Dashboard extends Component {
     super();
   }
   render() {
+    const { inventoryList } = this.props;
     return (
       <div>
         <p>This is the dashboard</p>
-        {this.props.inventoryList.map(item => {
-          return <Product item={this.props.item} />;
+        {inventoryList.map(item => {
+          return <Product item={item} />;
         })}
       </div>
     );
