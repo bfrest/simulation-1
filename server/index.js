@@ -17,6 +17,7 @@ app.use(cors());
 
 app.get("/api/inventory", controller.getAll);
 app.post("/api/product", controller.create);
+app.delete("/api/products", controller.deleteById);
 
 app.listen(3001, () => {
   console.log("app listening on port 3001");

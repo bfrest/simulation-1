@@ -16,5 +16,15 @@ module.exports = {
       .get_inventory()
       .then(products => res.status(200).send(products))
       .catch(() => res.status(500).send());
+  },
+
+  deleteById: (req, res) => {
+    const dbInstance = req.app.get("db");
+    const { product_id } = req.query;
+
+    dbInstance
+      .delete_by_id([product_id])
+      .then(() => res.status(200).send())
+      .catch(() => res.status(500).send());
   }
 };

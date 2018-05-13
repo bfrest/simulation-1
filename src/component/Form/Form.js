@@ -59,21 +59,24 @@ class Form extends Component {
     return (
       <div className="form">
         <img src={this.state.imgUrl} alt="picture of the product" className="form-img" />
+
         <p>Product Name:</p>
         <input type="text" onChange={this.handleName} className="productName" />
+
         <p>Price</p>
         <input type="text" onChange={this.handlePrice} placeholder="0" className="price" />
+
         <p>Image URL:</p>
-        {/*TODO: Make the image stay the same size no matter what*/}
         <input type="text" onChange={this.handleUrl} className="url" />
         <br />
+
         <button onClick={this.clearInputs} className="form-button">
           Cancel
         </button>
+
         <button onClick={this.createProduct} className="form-button">
           Add to inventory
         </button>
-        {console.log(this.state.name, this.state.price, this.state.imgUrl)}
       </div>
     );
   }

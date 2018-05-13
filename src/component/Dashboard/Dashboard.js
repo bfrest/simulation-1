@@ -6,13 +6,14 @@ class Dashboard extends Component {
   constructor() {
     super();
   }
+
   render() {
-    const { inventoryList } = this.props;
+    const { inventoryList, mountComponent } = this.props;
     return (
       <div>
         <p>This is the dashboard</p>
         {inventoryList.map(item => {
-          return <Product item={item} />;
+          return <Product item={item} mountComponent={mountComponent} />;
         })}
       </div>
     );
