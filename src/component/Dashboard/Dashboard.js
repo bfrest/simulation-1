@@ -3,17 +3,13 @@ import "./Dashboard.css";
 import Product from "../Product/Product";
 
 class Dashboard extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
-    const { inventoryList, mountComponent } = this.props;
+    const { inventoryList, mountComponent, getSelectedProduct } = this.props;
     return (
       <div>
         <p>This is the dashboard</p>
         {inventoryList.map(item => {
-          return <Product item={item} mountComponent={mountComponent} />;
+          return <Product item={item} mountComponent={mountComponent} getSelectedProduct={getSelectedProduct} />;
         })}
       </div>
     );

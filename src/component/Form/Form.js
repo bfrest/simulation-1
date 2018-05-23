@@ -12,6 +12,7 @@ class Form extends Component {
       name: "",
       price: ""
     };
+
     this.handleUrl = this.handleUrl.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
@@ -46,6 +47,9 @@ class Form extends Component {
     priceInput.value = "";
     url.value = "";
     this.setState({ imgUrl: mainUrl });
+
+    //TODO: See if this invoke works
+    this.props.cancelEdit();
   }
 
   createProduct() {
@@ -55,25 +59,25 @@ class Form extends Component {
     });
   }
 
+  componentDidUpdate(oldProps) {}
+
   render() {
+    //const { selected } = this.props;
+
     return (
       <div className="form">
-        <img src={this.state.imgUrl} alt="picture of the product" className="form-img" />
-
+        <img src={this.state.imgUrl} alt="product" className="form-img" />
         <p>Product Name:</p>
         <input type="text" onChange={this.handleName} className="productName" />
-
         <p>Price</p>
         <input type="text" onChange={this.handlePrice} placeholder="0" className="price" />
-
         <p>Image URL:</p>
         <input type="text" onChange={this.handleUrl} className="url" />
         <br />
-
         <button onClick={this.clearInputs} className="form-button">
           Cancel
         </button>
-
+        {/*TODO: make sure if the person is editing a product, the button says 'Save changes'*/}
         <button onClick={this.createProduct} className="form-button">
           Add to inventory
         </button>
