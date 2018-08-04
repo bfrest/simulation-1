@@ -12,8 +12,8 @@ class App extends Component {
     super();
     this.state = {
       inventory: [],
-      selected: null,
-      deleted: null
+      deleted: null,
+      selected: null
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
