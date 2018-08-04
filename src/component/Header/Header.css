@@ -1,6 +1,8 @@
 .header {
   background: #ab2a19;
   width: 100%;
+  align-self: flex-start;
+  position: fixed;
 }
 .header h2 {
   padding: 6px;

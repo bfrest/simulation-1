@@ -12,11 +12,13 @@ class App extends Component {
     super();
     this.state = {
       inventory: [],
-      selected: ""
+      selected: null,
+      deleted: null
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.getSelectedProduct = this.getSelectedProduct.bind(this);
+    this.getAllProducts = this.getAllProducts.bind(this);
   }
 
   componentDidMount() {
@@ -25,23 +27,30 @@ class App extends Component {
     });
   }
 
-  getSelectedProduct(product_id, name, price, image_url) {
-    this.setState({ selected: { product_id, name, price, image_url } });
+  getAllProducts() {
+    axios.get("http://localhost:3001/api/inventory").then(res => {
+      this.setState({ inventory: res.data });
+    });
+  }
+
+  getSelectedProduct(id) {
+    this.setState({ selected: id });
   }
 
   // cancels the edit on a product
   cancelEdit() {
-    this.setState({ selected: "" });
+    this.setState({ selected: null });
   }
 
   render() {
-    const { inventory } = this.state;
+    const { inventory, selected } = this.state;
     return (
-      <div className="App">
+      <div className="App-Wrapper">
         <Header />
-        <Form getAllProducts={this.componentDidMount} cancelEdit={this.cancelEdit} />
-        <Dashboard inventoryList={inventory} mountComponent={this.componentDidMount} getSelectedProduct={this.getSelectedProduct} />
-        {console.log(this.state.selected)}
+        <div className="App">
+          <Dashboard inventoryList={inventory} getAllProducts={this.getAllProducts} getSelectedProduct={this.getSelectedProduct} />
+          <Form getAllProducts={this.getAllProducts} cancelEdit={this.cancelEdit} selectedProduct={selected} />
+        </div>
       </div>
     );
   }
