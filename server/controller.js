@@ -36,5 +36,18 @@ module.exports = {
       .get_product([id])
       .then(product => res.status(200).send(product))
       .catch(() => res.status(500).send());
+  },
+
+  updateProduct: (req, res) => {
+    dbInstance = req.app.get("db");
+    const { id, name, price, imgUrl } = req.query;
+
+    console.log(req.params);
+
+    dbInstance
+      .update_product([id, name, price, imgUrl])
+      //! the products may or may not work?
+      .then(() => res.status(200).send())
+      .catch(() => res.status(500).send());
   }
 };

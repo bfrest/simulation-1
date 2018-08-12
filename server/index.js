@@ -19,6 +19,7 @@ app.get("/api/inventory", controller.getAll);
 app.post("/api/product", controller.create);
 app.delete("/api/products", controller.deleteById);
 app.get("/api/product", controller.getProductById);
+app.put("/api/editProduct", controller.updateProduct);
 
 app.listen(3001, () => {
   console.log("app listening on port 3001");

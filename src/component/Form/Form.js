@@ -21,6 +21,7 @@ class Form extends Component {
     this.handleUrl = this.handleUrl.bind(this);
     this.clearInputs = this.clearInputs.bind(this);
     this.createProduct = this.createProduct.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
     //this.handleAddToInventory = this.handleAddToInventory.bind(this);
   }
 
@@ -35,7 +36,7 @@ class Form extends Component {
   }
 
   handleName(event) {
-    const { imgUrl, name, price } = this.state.product;
+    const { imgUrl, price } = this.state.product;
     this.setState({ product: { name: event.target.value, price: price, imgUrl: imgUrl } });
   }
 
@@ -55,8 +56,9 @@ class Form extends Component {
     this.setState({
       product: {
         imgUrl: mainUrl,
-        name: null,
-        price: null
+        name: "",
+        price: "",
+        id: ""
       }
     });
     //TODO: See if this invoke works
@@ -77,34 +79,54 @@ class Form extends Component {
     if (this.props.selectedProduct !== prevProps.selectedProduct) {
       const { selectedProduct } = this.props;
 
+      // this takes the currently selected item and makes an axios request for it
       axios.get(`http://localhost:3001/api/product?id=${selectedProduct}`).then(res => {
-        this.setState({ product: { name: res.data[0].name, price: res.data[0].price, imgUrl: res.data[0].img_url } });
-        console.log(this.state.product);
+        this.setState({ product: { name: res.data[0].name, price: res.data[0].price, imgUrl: res.data[0].img_url, id: selectedProduct } });
       });
+    } else {
+      this.props.getAllProducts();
     }
   }
 
+  updateProduct(id, name, price, imgUrl) {
+    axios
+      .put(`http://localhost:3001/api/editProduct?id=${id}&name=${name}&price=${price}&imgUrl=${imgUrl}`)
+      .then(this.setState({ product: { id: null, name: "", price: "", imgUrl: mainUrl } }));
+  }
   render() {
-    let thisObject;
-    const { name, price, img_url } = this.state.product;
+    const { name, price, imgUrl } = this.state.product;
 
+    let actionButton = this.props.selectedProduct ? (
+      <button onClick={() => this.updateProduct(this.props.selectedProduct, name, price, imgUrl)} className="form-button">
+        Update Product
+      </button>
+    ) : (
+      <button onClick={this.createProduct} className="form-button">
+        Add to inventory
+      </button>
+    );
+
+    let urlValue;
+    if (imgUrl === mainUrl) {
+      urlValue = "";
+    } else {
+      urlValue = imgUrl;
+    }
     return (
       <div className="form">
-        <img src={this.state.product.imgUrl} alt="product" className="form-img" />
+        <img src={imgUrl} alt="product" className="form-img" />
         <p>Product Name:</p>
-        <input type="text" onChange={this.handleName} className="productName" />
+        <input type="text" onChange={this.handleName} className="productName" value={name} />
         <p>Price</p>
-        <input type="text" onChange={this.handlePrice} placeholder="0" className="price" />
+        <input type="text" onChange={this.handlePrice} className="price" value={price} />
         <p>Image URL:</p>
-        <input type="text" onChange={this.handleUrl} className="url" />
+        <input type="text" onChange={this.handleUrl} className="url" value={urlValue} />
         <br />
         <button onClick={this.clearInputs} className="form-button">
           Cancel
         </button>
         {/*TODO: make sure if the person is editing a product, the button says 'Save changes'*/}
-        <button onClick={this.createProduct} className="form-button">
-          Add to inventory
-        </button>
+        {actionButton}
       </div>
     );
   }

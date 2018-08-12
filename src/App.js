@@ -19,12 +19,17 @@ class App extends Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.getSelectedProduct = this.getSelectedProduct.bind(this);
     this.getAllProducts = this.getAllProducts.bind(this);
+    this.resetSelected = this.resetSelected.bind(this);
   }
 
   componentDidMount() {
     axios.get("http://localhost:3001/api/inventory").then(res => {
       this.setState({ inventory: res.data });
     });
+  }
+
+  resetSelected() {
+    this.setState({ selected: null });
   }
 
   getAllProducts() {
@@ -49,7 +54,7 @@ class App extends Component {
         <Header />
         <div className="App">
           <Dashboard inventoryList={inventory} getAllProducts={this.getAllProducts} getSelectedProduct={this.getSelectedProduct} />
-          <Form getAllProducts={this.getAllProducts} cancelEdit={this.cancelEdit} selectedProduct={selected} />
+          <Form getAllProducts={this.getAllProducts} cancelEdit={this.cancelEdit} selectedProduct={selected} resetSelected={this.resetSelected} />
         </div>
       </div>
     );
