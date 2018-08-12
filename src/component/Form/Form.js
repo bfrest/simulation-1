@@ -31,7 +31,7 @@ class Form extends Component {
       const id = this.props.match.params.id;
       axios.get(`http://localhost:3001/api/product?id=${id}`).then(res => {
         const data = res.data[0];
-        this.setState({ name: data.name, price: data.price, imgUrl: data.img_url, editing: true });
+        this.setState({ id: id, name: data.name, price: data.price, imgUrl: data.img_url, editing: true });
       });
     } else if (currentPath === "/") {
       this.setState({
@@ -77,13 +77,15 @@ class Form extends Component {
       price: "",
       id: ""
     });
+
+    this.updateProduct = this.updateProduct.bind(this);
   }
 
   createProduct() {
     const { imgUrl, name, price } = this.state;
 
     axios.post(`http://localhost:3001/api/product?name=${name}&price=${price}&img_url=${imgUrl}`).then(() => {
-      this.setState({ imgUrl: mainUrl, name: "", price: "" });
+      this.setState({ imgUrl: mainUrl, name: "", price: "", editing: false });
       this.props.getAllProducts();
       this.clearInputs();
     });
@@ -102,10 +104,10 @@ class Form extends Component {
   }
 
   render() {
-    const { name, price, imgUrl } = this.state;
+    const { id, name, price, imgUrl } = this.state;
 
     let actionButton = this.state.editing ? (
-      <button onClick={() => this.updateProduct(this.props.selectedProduct, name, price, imgUrl)} className="form-button">
+      <button onClick={() => this.updateProduct(id, name, price, imgUrl)} className="form-button">
         Update Product
       </button>
     ) : (
@@ -122,6 +124,7 @@ class Form extends Component {
     }
     return (
       <div className="form">
+        {console.log(this.props)}
         <img src={imgUrl} alt="product" className="form-img" />
         <p>Product Name:</p>
         <input type="text" onChange={this.handleName} className="productName" value={name} />

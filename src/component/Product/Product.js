@@ -7,16 +7,19 @@ const Product = ({ item, deleteProduct, getAllProducts }) => {
   return (
     <div className="product-item">
       <img src={item.img_url} alt="item" className="form-img" />
-      <li>name: {item.name} </li>
-      <li>price: {item.price}</li>
-
-      <button
-        onClick={() => {
-          deleteProduct(item.id);
-          getAllProducts();
-        }}>
-        delete
-      </button>
+      <div className="info">
+        <li>{item.name} </li>
+        <li>${item.price}</li>
+      </div>
+      <div className="productButtons">
+        <button
+          onClick={() => {
+            deleteProduct(item.id);
+            getAllProducts();
+          }}>
+          delete
+        </button>
+      </div>
 
       <Link to={`/edit/${item.id}`}>
         <button>Edit</button>

@@ -1,9 +1,13 @@
 .product-item {
-  width: 45%;
+  width: 100%;
   background: #d34735;
-  margin: 20px;
+  margin: 15px;
   border-radius: 3px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 10px;
+}
+
+.product-item li {
+  list-style-type: none;
 }

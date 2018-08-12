@@ -6,13 +6,7 @@ import Header from "./component/Header/Header";
 import routes from "./routes.js";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
   render() {
-    const { inventory, selected } = this.state;
     return (
       <div className="App-Wrapper">
         <Header />
