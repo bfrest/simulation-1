@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import mainUrl from "./img.js";
 import "./Form.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class Form extends Component {
   constructor() {
     super();
 
     this.state = {
-      product: {
-        imgUrl: mainUrl,
-        name: null,
-        price: null
-      }
+      imgUrl: mainUrl,
+      name: null,
+      price: null,
+      editing: false
     };
 
     this.handleUrl = this.handleUrl.bind(this);
@@ -25,24 +25,42 @@ class Form extends Component {
     //this.handleAddToInventory = this.handleAddToInventory.bind(this);
   }
 
-  handleUrl(event) {
-    const { name, price } = this.state.product;
+  componentDidMount() {
+    let currentPath = this.props.location.pathname;
+    if (currentPath !== "/") {
+      const id = this.props.match.params.id;
+      axios.get(`http://localhost:3001/api/product?id=${id}`).then(res => {
+        const data = res.data[0];
+        this.setState({ name: data.name, price: data.price, imgUrl: data.img_url, editing: true });
+      });
+    } else if (currentPath === "/") {
+      this.setState({
+        imgUrl: mainUrl,
+        name: "",
+        price: "",
+        editing: false
+      });
+    }
+  }
 
-    this.setState({ product: { imgUrl: event.target.value, name: name, price: price } });
+  handleUrl(event) {
+    const { name, price } = this.state;
+
+    this.setState({ imgUrl: event.target.value, name: name, price: price });
     // sets the image back to the no image available
     if (event.target.value === "") {
-      this.setState({ product: { imgUrl: mainUrl, name: name, price: price } });
+      this.setState({ imgUrl: mainUrl, name: name, price: price });
     }
   }
 
   handleName(event) {
-    const { imgUrl, price } = this.state.product;
-    this.setState({ product: { name: event.target.value, price: price, imgUrl: imgUrl } });
+    const { imgUrl, price } = this.state;
+    this.setState({ name: event.target.value, price: price, imgUrl: imgUrl });
   }
 
   handlePrice(event) {
-    const { imgUrl, name } = this.state.product;
-    this.setState({ product: { price: event.target.value, name: name, imgUrl: imgUrl } });
+    const { imgUrl, name } = this.state;
+    this.setState({ price: event.target.value, name: name, imgUrl: imgUrl });
   }
 
   clearInputs(event) {
@@ -54,49 +72,39 @@ class Form extends Component {
     priceInput.value = "";
     url.value = "";
     this.setState({
-      product: {
-        imgUrl: mainUrl,
-        name: "",
-        price: "",
-        id: ""
-      }
+      imgUrl: mainUrl,
+      name: "",
+      price: "",
+      id: ""
     });
-    //TODO: See if this invoke works
-    this.props.cancelEdit();
   }
 
   createProduct() {
-    const { imgUrl, name, price } = this.state.product;
+    const { imgUrl, name, price } = this.state;
 
     axios.post(`http://localhost:3001/api/product?name=${name}&price=${price}&img_url=${imgUrl}`).then(() => {
-      this.setState({ product: { imgUrl: mainUrl, name: "", price: "" } });
+      this.setState({ imgUrl: mainUrl, name: "", price: "" });
       this.props.getAllProducts();
       this.clearInputs();
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.selectedProduct !== prevProps.selectedProduct) {
-      const { selectedProduct } = this.props;
-
-      // this takes the currently selected item and makes an axios request for it
-      axios.get(`http://localhost:3001/api/product?id=${selectedProduct}`).then(res => {
-        this.setState({ product: { name: res.data[0].name, price: res.data[0].price, imgUrl: res.data[0].img_url, id: selectedProduct } });
-      });
-    } else {
-      this.props.getAllProducts();
+  componentDidUpdate(prevState) {
+    if (prevState.location.pathname !== "/add" && this.props.history.location.pathname === "/add") {
+      this.clearInputs();
     }
   }
 
   updateProduct(id, name, price, imgUrl) {
     axios
       .put(`http://localhost:3001/api/editProduct?id=${id}&name=${name}&price=${price}&imgUrl=${imgUrl}`)
-      .then(this.setState({ product: { id: null, name: "", price: "", imgUrl: mainUrl } }));
+      .then(this.setState({ id: null, name: "", price: "", imgUrl: mainUrl }));
   }
-  render() {
-    const { name, price, imgUrl } = this.state.product;
 
-    let actionButton = this.props.selectedProduct ? (
+  render() {
+    const { name, price, imgUrl } = this.state;
+
+    let actionButton = this.state.editing ? (
       <button onClick={() => this.updateProduct(this.props.selectedProduct, name, price, imgUrl)} className="form-button">
         Update Product
       </button>
@@ -122,11 +130,11 @@ class Form extends Component {
         <p>Image URL:</p>
         <input type="text" onChange={this.handleUrl} className="url" value={urlValue} />
         <br />
-        <button onClick={this.clearInputs} className="form-button">
-          Cancel
-        </button>
+        <Link to="/">
+          <button className="form-button">Cancel</button>
+        </Link>
         {/*TODO: make sure if the person is editing a product, the button says 'Save changes'*/}
-        {actionButton}
+        <Link to="/">{actionButton}</Link>
       </div>
     );
   }

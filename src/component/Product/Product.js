@@ -1,8 +1,9 @@
 import React from "react";
 import "./Product.css";
+import { Link } from "react-router-dom";
 
 // destructures the props
-const Product = ({ item, getSelectedProduct, deleteProduct, getAllProducts }) => {
+const Product = ({ item, deleteProduct, getAllProducts }) => {
   return (
     <div className="product-item">
       <img src={item.img_url} alt="item" className="form-img" />
@@ -17,12 +18,9 @@ const Product = ({ item, getSelectedProduct, deleteProduct, getAllProducts }) =>
         delete
       </button>
 
-      <button
-        onClick={() => {
-          getSelectedProduct(item.id);
-        }}>
-        Edit
-      </button>
+      <Link to={`/edit/${item.id}`}>
+        <button>Edit</button>
+      </Link>
     </div>
   );
 };
